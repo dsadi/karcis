@@ -10,18 +10,18 @@ $phone = 0;
 if(@$_POST['phone'] != '' || @$_POST['phone'] != null){
     $phone = @$_POST['phone'];
 }
-
+$email_regex = "/([a-zA-Z0-9!#$%&’?^_`~-])+@([a-zA-Z0-9-])+(.com)+/";
+$myemail = "abc@gmail.com";
+if(preg_match($email_regex,$myemail)){
+$email = @$_POST['email'];
+}
+else{
+echo "An Email with a .com domain is acceptable only.";
+}
 
 // mitra
 $fileName = $_FILES['userfile']['name'];
-
-
-
- // nama direktori upload
 $namaDir = '../files/';
-
-// membuat path nama direktori + nama file.
-// $pathFile = $namaDir.$fileName;
 
 if ($fileName) {
     $newFileName = $namaDir.$fileName;
