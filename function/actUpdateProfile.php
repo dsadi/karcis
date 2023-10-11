@@ -1,13 +1,12 @@
 <?php
 include "../conn.php";
-
 @session_start();
-
 $id = @$_POST['id_user'];
 $fullname = @$_POST['fullname'];
+$fullname = strip_tags(mysql_real_escape_string(trim($fullname)));
 $email = @$_POST['email'];
-$phone = 0;
 
+$phone = 0;
 if(@$_POST['phone'] != '' || @$_POST['phone'] != null){
     $phone = @$_POST['phone'];
 }
