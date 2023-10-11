@@ -10,12 +10,11 @@ $reset_password = "SELECT link FROM forgot_password WHERE hash = '$hash'";
 $prepareQ = mysqli_prepare($conn, $reset_passwordSecure);
 mysqli_stmt_bind_param($prepareQ, "s", $hash);
 mysqli_stmt_execute($prepareQ);
-$r_reset_password = 	mysqli_stmt_fetch($prepareQ);
+$result = $prepareQ->get_result();
+$r_reset_password = 	mysqli_fetch_row($result);
 
-
-$reset_password_result = $conn->query($reset_password);
-
-// $r_reset_password = mysqli_fetch_row($reset_password_result);
+$result->close();
+$prepareQ->close();
 
 ?>
 
