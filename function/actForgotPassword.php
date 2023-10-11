@@ -1,30 +1,39 @@
 <?php
 include "../conn.php";
+require '../Database.php';
 
 $errors = array();
 $email = @$_POST['email'];
 
-if (!empty($email)) {
+if (empty($email)) {
     $errors['email'] = "Email is Required";
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors["email"] = "Invalid email format";
 }
 
 
+
 if (empty($errors)) {
+    $db = new Database();
+
+    $qGetEmail = "SELECT Email from users where Email = ?";
+
+    $getEmail = $db->query($qGetEmail, $email);
+
     $hash = sha1($email);
     $link = $host . "resetPassword.php?hash=" . $hash;
 
 
     $sql = "INSERT INTO forgot_password (email, hash, link)
-    VALUES ('$email', '$hash', '$link')";
+    VALUES (?, ?, ?)";
 
-    if ($conn->query($sql) === TRUE) {
+    $qInsertEmail = $db->query($sql, array($email, $hash, $link));
+
+    if ($qInsertEmail && $qInsertEmail->rowCount() == 1) {
         header('location:' . $host . 'confirmation.php?hash=' . $hash);
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } else {
-    echo "";
-    header('location:' . $host . 'forgotPassword.php?err=' . $errors['email']);
+    header('location:' . $host . 'forgotPassword.php?status=failed&err=' . $errors['email']);
 }
